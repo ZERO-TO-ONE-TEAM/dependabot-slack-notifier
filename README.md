@@ -1,0 +1,2 @@
+# dependabot-slack-notifier
+DependaBotで検出された脆弱性アラートをSlackに通知する

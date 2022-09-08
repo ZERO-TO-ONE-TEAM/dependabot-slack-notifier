@@ -1,0 +1,26 @@
+{
+  "name": "@zero-to-one/dependabot-slack-notifier",
+  "version": "0.0.0",
+  "private": true,
+  "description": "DependaBotが検出したセキュリティアラートをSlackに通知する",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write src/**/*.ts",
+    "format-check": "prettier --check src/**/*.ts",
+    "package": "ncc build"
+  },
+  "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/github": "^5.0.3",
+    "@octokit/graphql-schema": "github:octokit/graphql-schema",
+    "@slack/webhook": "^6.1.0"
+  },
+  "devDependencies": {
+    "@slack/types": "^2.7.0",
+    "@types/node": "^18.7.16",
+    "@vercel/ncc": "^0.34.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2"
+  }
+}

@@ -1,0 +1,14 @@
+name: 'dependabot-slack-notifier'
+description: 'DependaBotが検出したセキュリティアラートをSlackに通知する'
+author: 'ZERO-TO-ONE-TEAM'
+inputs:
+  token:
+    description: 'GitHub Personal Access Token'
+  slack_webhook:
+    description: 'Slack Webhook URL. More info: https://api.slack.com/messaging/webhooks'
+branding:
+  icon: 'alert-octagon'
+  color: 'red'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

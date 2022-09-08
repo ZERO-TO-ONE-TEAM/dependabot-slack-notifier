@@ -27,6 +27,7 @@ const createSummaryBlock = (
     text: {
       type: "mrkdwn",
       text: `
+<@U01UWSMGFML>
 You have ${alertCount} vulnerabilities in *${repositoryOwner}/${repositoryName}*.
 ${alertCount > MAX_COUNT_SLACK ? createMaxAlertsMarkdownNotice() : ""}
       `,

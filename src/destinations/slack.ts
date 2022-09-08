@@ -3,6 +3,20 @@ import { Alert } from "../entities";
 import { IncomingWebhook } from "@slack/webhook";
 import { KnownBlock } from "@slack/types";
 
+const securityLevelToInt = (level: string | undefined): number => {
+  if (level === undefined) {
+    return 0;
+  }
+  return (
+    {
+      LOW: 0,
+      MODERATE: 1,
+      HIGH: 2,
+      CRITICAL: 3,
+    }[level.toUpperCase()] ?? 0
+  );
+};
+
 const createSummaryBlock = (
   alertCount: number,
   repositoryName: string,
@@ -67,12 +81,17 @@ export const MAX_COUNT_SLACK = 30;
 
 export const sendAlertsToSlack = async (
   webhookUrl: string,
-  alerts: Alert[]
+  alerts: Alert[],
+  level: string
 ): Promise<void> => {
   const webhook = new IncomingWebhook(webhookUrl);
   const alertBlocks: KnownBlock[] = [];
   for (const alert of alerts) {
-    alertBlocks.push(createAlertBlock(alert));
+    if (
+      securityLevelToInt(alert.advisory?.severity) >= securityLevelToInt(level)
+    ) {
+      alertBlocks.push(createAlertBlock(alert));
+    }
   }
   await webhook.send({
     blocks: [

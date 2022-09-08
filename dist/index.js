@@ -57,6 +57,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.sendAlertsToSlack = exports.MAX_COUNT_SLACK = exports.validateSlackWebhookUrl = void 0;
 const constants_1 = __nccwpck_require__(5105);
 const webhook_1 = __nccwpck_require__(1095);
+const securityLevelToInt = (level) => {
+    var _a;
+    if (level === undefined) {
+        return 0;
+    }
+    return ((_a = {
+        LOW: 0,
+        MODERATE: 1,
+        HIGH: 2,
+        CRITICAL: 3,
+    }[level.toUpperCase()]) !== null && _a !== void 0 ? _a : 0);
+};
 const createSummaryBlock = (alertCount, repositoryName, repositoryOwner) => {
     return {
         type: "section",
@@ -109,11 +121,14 @@ const validateSlackWebhookUrl = (url) => {
 };
 exports.validateSlackWebhookUrl = validateSlackWebhookUrl;
 exports.MAX_COUNT_SLACK = 30;
-const sendAlertsToSlack = (webhookUrl, alerts) => __awaiter(void 0, void 0, void 0, function* () {
+const sendAlertsToSlack = (webhookUrl, alerts, level) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const webhook = new webhook_1.IncomingWebhook(webhookUrl);
     const alertBlocks = [];
     for (const alert of alerts) {
-        alertBlocks.push(createAlertBlock(alert));
+        if (securityLevelToInt((_a = alert.advisory) === null || _a === void 0 ? void 0 : _a.severity) >= securityLevelToInt(level)) {
+            alertBlocks.push(createAlertBlock(alert));
+        }
     }
     yield webhook.send({
         blocks: [
@@ -365,6 +380,7 @@ function run() {
             const token = (0, core_1.getInput)('token');
             const slackWebhookUrl = (0, core_1.getInput)('slack_webhook');
             const count = parseInt((0, core_1.getInput)('count'));
+            const level = (0, core_1.getInput)('level');
             const owner = github_1.context.repo.owner;
             const repo = github_1.context.repo.repo;
             const alerts = yield (0, fetch_alerts_1.fetchAlerts)(token, repo, owner, count);
@@ -373,7 +389,7 @@ function run() {
                     (0, core_1.setFailed)(new Error('Invalid Slack Webhook URL'));
                 }
                 else {
-                    yield (0, destinations_1.sendAlertsToSlack)(slackWebhookUrl, alerts);
+                    yield (0, destinations_1.sendAlertsToSlack)(slackWebhookUrl, alerts, level);
                 }
             }
         }

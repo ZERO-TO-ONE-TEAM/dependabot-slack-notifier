@@ -8,7 +8,10 @@ inputs:
     description: 'Slack Webhook URL. More info: https://api.slack.com/messaging/webhooks'
   count:
     description: 'Number of vulnerability alerts to send'
-    default: 100
+    default: '100'
+  level:
+    description: 'LOW or MODERATE or HIGH or CRITICAL'
+    default: 'LOW'
 branding:
   icon: 'alert-octagon'
   color: 'red'

@@ -8,6 +8,7 @@ async function run(): Promise<void> {
         const token = getInput('token')
         const slackWebhookUrl = getInput('slack_webhook')
         const count = parseInt(getInput('count'))
+        const level = getInput('level')
         const owner = context.repo.owner
         const repo = context.repo.repo
         const alerts = await fetchAlerts(token, repo, owner, count)
@@ -15,7 +16,7 @@ async function run(): Promise<void> {
             if (!validateSlackWebhookUrl(slackWebhookUrl)) {
                 setFailed(new Error('Invalid Slack Webhook URL'))
             } else {
-                await sendAlertsToSlack(slackWebhookUrl, alerts)
+                await sendAlertsToSlack(slackWebhookUrl, alerts, level)
             }
         }
     } catch (err) {

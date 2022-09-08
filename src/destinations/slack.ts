@@ -51,6 +51,7 @@ const createAlertBlock = (alert: Alert): KnownBlock => {
 *Patched Version:* ${alert.vulnerability?.firstPatchedVersion}
 *Severity:* ${alert.advisory?.severity}
 *Summary:* ${alert.advisory?.summary}
+${alert.advisory?.toString()}
             `,
     },
     accessory: {
